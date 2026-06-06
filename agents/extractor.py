@@ -2,19 +2,16 @@ import json
 import os
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
-from langchain_core.messages import HumanMessage,SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 
-# 1. Load env and initialize OpenAI model
 load_dotenv()
 
 llm = ChatOpenAI(
-    model = "gpt-3.5-turbo",
+    model="gpt-3.5-turbo",
     temperature=0,
     api_key=os.getenv('OPENAI_API_KEY'),
 )
 
-
-# 2. System prompt — tells LLM exactly what to extract
 EXTRACTION_PROMPT = """
 You are an expert meeting analyst. Extract the following from the meeting transcript:
 
@@ -46,22 +43,29 @@ Return ONLY valid JSON. No explanation. No markdown. Example format:
 }
 """
 
-# 3. extract_from_transcript()
-#    Main function called by LangGraph extractor node
-#    Input  → raw transcript string
-#    Output → parsed dict with action_items, decisions, risks, people
+def strip_json(content: str) -> str:
+    # --------------------------------------------------
+    # strips markdown code fences if LLM adds them
+    # e.g. ```json ... ``` → just the JSON string
+    # --------------------------------------------------
+    content = content.strip()
+    if content.startswith("```"):
+        content = content.split("```")[1]
+        if content.startswith("json"):
+            content = content[4:]
+    return content.strip()
+
 def extract_from_transcript(transcript: str) -> dict:
     messages = [
         SystemMessage(content=EXTRACTION_PROMPT),
         HumanMessage(content=f"Meeting transcript:\n\n{transcript}")
     ]
-    
+
     response = llm.invoke(messages)
-    
+
     try:
-        extracted = json.loads(response.content)
+        extracted = json.loads(strip_json(response.content))
     except json.JSONDecodeError:
-        # if LLM returns invalid JSON, return safe empty structure
         extracted = {
             "action_items": [],
             "decisions": [],

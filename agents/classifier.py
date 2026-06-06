@@ -1,18 +1,17 @@
-from langchain_openai import ChatOpenAI
-from langchain_core.messages import HumanMessage, SystemMessage
 import json
 import os
 from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, SystemMessage
 
-# 1. Load env and initialize LLM
+load_dotenv()
+
 llm = ChatOpenAI(
     model="gpt-3.5-turbo",
     temperature=0,
     api_key=os.getenv("OPENAI_API_KEY")
 )
 
-
-# 2. System prompt — takes extracted data and
 CLASSIFICATION_PROMPT = """
 You are an expert project manager. You will receive a list of action items extracted from a meeting.
 
@@ -35,16 +34,17 @@ Return ONLY valid JSON. No explanation. No markdown. Format:
 }
 """
 
+def strip_json(content: str) -> str:
+    content = content.strip()
+    if content.startswith("```"):
+        content = content.split("```")[1]
+        if content.startswith("json"):
+            content = content[4:]
+    return content.strip()
 
-
-# 3. classify_action_items()
-#    Input  → extracted dict from extractor.py
-#    Output → same dict with priority added to each item
-#             and needs_review flag set
 def classify_action_items(extracted_data: dict) -> dict:
     action_items = extracted_data.get("action_items", [])
 
-    # if no action items found, return as is
     if not action_items:
         return extracted_data
 
@@ -56,19 +56,14 @@ def classify_action_items(extracted_data: dict) -> dict:
     response = llm.invoke(messages)
 
     try:
-        classified = json.loads(response.content)
+        classified = json.loads(strip_json(response.content))
         action_items = classified.get("action_items", action_items)
     except json.JSONDecodeError:
-        # if LLM fails, keep original items but assign Medium priority
         for item in action_items:
             item["priority"] = item.get("priority", "Medium")
 
-    # flag items that need human review
-    # confidence < 0.7 means LLM wasn't sure this
-    # was a real action item → human should verify
     for item in action_items:
         item["needs_review"] = item.get("confidence_score", 1.0) < 0.7
 
-    # merge back into full extracted data
     extracted_data["action_items"] = action_items
     return extracted_data
