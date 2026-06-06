@@ -1,31 +1,40 @@
 # docker-compose.yml
 
-
 services:
 
   # --------------------------------------------------
-  # PostgreSQL with pgvector extension
-  # ankane/pgvector is official postgres + pgvector image
+  # 1. PostgreSQL with pgvector
   # --------------------------------------------------
   postgres:
     image: ankane/pgvector
     container_name: meeting_postgres
-    
-    # these become the credentials in your DATABASE_URL
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: meeting_intelligence
-    
-    # maps container port 5432 to your local port 5432
-    # so your app connects via localhost:5432
     ports:
       - "5432:5432"
-    
-    # persists data even if container is stopped/deleted
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-# named volume — Docker manages this on your machine
+  # --------------------------------------------------
+  # 2. FastAPI service
+  #    depends_on postgres = waits for DB to start
+  #    env_file loads your .env into the container
+  # --------------------------------------------------
+  api:
+    build: .
+    container_name: meeting_api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    volumes:
+      # mounts local code into container
+      # so code changes reflect without rebuilding
+      - .:/app
+
 volumes:
   postgres_data:
