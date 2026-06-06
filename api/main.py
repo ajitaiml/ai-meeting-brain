@@ -4,6 +4,8 @@ import os
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
@@ -24,12 +26,10 @@ app = FastAPI(
 
 # --------------------------------------------------
 # 2. CORS middleware
-#    Allows frontend (HTML/JS) to call this API
-#    Without this, browser blocks all API calls
 # --------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],    # in production, replace * with your domain
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -43,9 +43,7 @@ def startup():
 
 
 # --------------------------------------------------
-# 4. Request/Response models using Pydantic
-#    Pydantic validates incoming JSON automatically
-#    If required field is missing → 422 error returned
+# 4. Pydantic request models
 # --------------------------------------------------
 class AnalyzeRequest(BaseModel):
     title: str
@@ -57,14 +55,10 @@ class SearchRequest(BaseModel):
 
 # --------------------------------------------------
 # 5. POST /analyze
-#    Main endpoint — runs full LangGraph pipeline
-#    Input  → title + transcript
-#    Output → summary, email draft, action items, meeting_id
 # --------------------------------------------------
 @app.post("/analyze")
 def analyze_meeting(request: AnalyzeRequest):
     try:
-        # initial state for LangGraph
         initial_state = {
             "title": request.title,
             "transcript": request.transcript,
@@ -77,7 +71,6 @@ def analyze_meeting(request: AnalyzeRequest):
             "review_items": []
         }
 
-        # run the full pipeline
         result = meeting_graph.invoke(initial_state)
 
         return {
@@ -97,7 +90,6 @@ def analyze_meeting(request: AnalyzeRequest):
 
 # --------------------------------------------------
 # 6. GET /meetings
-#    Returns list of all past meetings
 # --------------------------------------------------
 @app.get("/meetings")
 def get_meetings(db: Session = Depends(get_db)):
@@ -114,7 +106,6 @@ def get_meetings(db: Session = Depends(get_db)):
 
 # --------------------------------------------------
 # 7. GET /meetings/{id}
-#    Returns single meeting with all action items
 # --------------------------------------------------
 @app.get("/meetings/{meeting_id}")
 def get_meeting(meeting_id: int, db: Session = Depends(get_db)):
@@ -148,8 +139,6 @@ def get_meeting(meeting_id: int, db: Session = Depends(get_db)):
 
 # --------------------------------------------------
 # 8. POST /search
-#    Semantic search across past meetings via pgvector
-#    Calls MCP search tool directly
 # --------------------------------------------------
 @app.post("/search")
 def search_meetings(request: SearchRequest):
@@ -162,9 +151,15 @@ def search_meetings(request: SearchRequest):
 
 # --------------------------------------------------
 # 9. GET /health
-#    Simple health check endpoint
-#    Used by Docker and deployment platforms
 # --------------------------------------------------
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+# --------------------------------------------------
+# 10. Serve frontend — MUST be last
+#     mounts ui/ folder at root
+#     html=True serves index.html for unknown routes
+# --------------------------------------------------
+app.mount("/", StaticFiles(directory="ui", html=True), name="ui")

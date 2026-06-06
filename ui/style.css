@@ -1,0 +1,378 @@
+/* ------------------------------------------------
+   RESET & BASE
+------------------------------------------------ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f1117;
+  color: #e0e0e0;
+  min-height: 100vh;
+}
+
+/* ------------------------------------------------
+   HEADER
+------------------------------------------------ */
+header {
+  background: #1a1d2e;
+  border-bottom: 1px solid #2a2d3e;
+  padding: 16px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #7c6af7;
+}
+
+nav a {
+  color: #a0a0b0;
+  text-decoration: none;
+  margin-left: 28px;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+
+nav a:hover {
+  color: #7c6af7;
+}
+
+nav a.active {
+  color: #7c6af7;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------
+   MAIN LAYOUT
+------------------------------------------------ */
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.section {
+  margin-bottom: 80px;
+}
+
+.section h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+.subtitle {
+  color: #7a7a8c;
+  margin-bottom: 28px;
+  font-size: 0.95rem;
+}
+
+/* ------------------------------------------------
+   FORM
+------------------------------------------------ */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  color: #a0a0b0;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  background: #1a1d2e;
+  border: 1px solid #2a2d3e;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #e0e0e0;
+  font-size: 0.95rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #7c6af7;
+}
+
+/* ------------------------------------------------
+   BUTTONS
+------------------------------------------------ */
+.btn-primary {
+  background: #7c6af7;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #6a58e0;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #7c6af7;
+  border: 1px solid #7c6af7;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #7c6af7;
+  color: #ffffff;
+}
+
+/* ------------------------------------------------
+   SPINNER
+------------------------------------------------ */
+.spinner {
+  margin-top: 20px;
+  color: #7c6af7;
+  font-size: 0.95rem;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.hidden {
+  display: none;
+}
+
+/* ------------------------------------------------
+   CARDS
+------------------------------------------------ */
+.card {
+  background: #1a1d2e;
+  border: 1px solid #2a2d3e;
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 20px;
+}
+
+.card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #ffffff;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* ------------------------------------------------
+   ACTION ITEMS
+------------------------------------------------ */
+.action-item {
+  background: #12141f;
+  border: 1px solid #2a2d3e;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.action-item-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.action-item-task {
+  font-weight: 600;
+  color: #ffffff;
+  flex: 1;
+}
+
+.badge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-high { background: #3d1f1f; color: #ff6b6b; }
+.badge-medium { background: #2d2a1a; color: #ffd166; }
+.badge-low { background: #1a2d1a; color: #6bcb77; }
+.badge-review { background: #2a1a3d; color: #c77dff; }
+
+.action-item-meta {
+  display: flex;
+  gap: 20px;
+  font-size: 0.85rem;
+  color: #7a7a8c;
+}
+
+/* ------------------------------------------------
+   LISTS
+------------------------------------------------ */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+ul li {
+  padding: 8px 0;
+  border-bottom: 1px solid #2a2d3e;
+  font-size: 0.9rem;
+  color: #c0c0d0;
+}
+
+ul li:last-child {
+  border-bottom: none;
+}
+
+ul li::before {
+  content: "→ ";
+  color: #7c6af7;
+}
+
+/* ------------------------------------------------
+   EMAIL DRAFT
+------------------------------------------------ */
+pre {
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: #c0c0d0;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+/* ------------------------------------------------
+   MEETINGS GRID
+------------------------------------------------ */
+.meetings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.meeting-card {
+  background: #1a1d2e;
+  border: 1px solid #2a2d3e;
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.meeting-card:hover {
+  border-color: #7c6af7;
+}
+
+.meeting-card h4 {
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.meeting-card p {
+  color: #7a7a8c;
+  font-size: 0.85rem;
+}
+
+/* ------------------------------------------------
+   SEARCH
+------------------------------------------------ */
+.search-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.search-bar input {
+  flex: 1;
+  background: #1a1d2e;
+  border: 1px solid #2a2d3e;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #e0e0e0;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: #7c6af7;
+}
+
+.search-result {
+  background: #1a1d2e;
+  border: 1px solid #2a2d3e;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.search-result p {
+  color: #c0c0d0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.search-result span {
+  font-size: 0.8rem;
+  color: #7c6af7;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* ------------------------------------------------
+   RESPONSIVE
+------------------------------------------------ */
+@media (max-width: 768px) {
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .search-bar {
+    flex-direction: column;
+  }
+
+  header {
+    padding: 12px 16px;
+  }
+
+  main {
+    padding: 24px 16px;
+  }
+}
