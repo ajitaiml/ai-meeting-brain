@@ -184,26 +184,26 @@ async function loadMeetingDetail(id) {
     const response = await fetch(`${API}/meetings/${id}`);
     const data = await response.json();
 
-    // scroll to analyze section and display
+    // switch to analyze section first
+    showSection("analyze");
+
+    // fill in the form
     document.getElementById("meetingTitle").value = data.title;
     document.getElementById("transcript").value = data.transcript;
 
-    // build fake result object and display
+    // display action items
     displayResults({
-      summary: `Loaded from DB: ${data.title}`,
-      email_draft: "Re-analyze to generate email.",
+      summary: `Viewing saved meeting: ${data.title}`,
+      email_draft: "Re-analyze to regenerate email.",
       action_items: data.action_items,
       decisions: [],
       risks: []
     });
 
-    document.getElementById("analyze").scrollIntoView({ behavior: "smooth" });
-
   } catch (err) {
     alert("Failed to load meeting detail.");
   }
 }
-
 
 // ------------------------------------------------
 // searchMeetings()
