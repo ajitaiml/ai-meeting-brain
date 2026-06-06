@@ -15,7 +15,7 @@ from mcp_server.server import save_meeting, save_action_items, save_embeddings
 load_dotenv()
 
 llm = ChatOpenAI(
-    model="gpt-4o-mini",
+    model="gpt-3.5-turbo",
     temperature=0.3,
     api_key=os.getenv("OPENAI_API_KEY")
 )

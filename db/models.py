@@ -21,7 +21,7 @@ engine = create_engine(DATABASE_URL)
 Base = declarative_base()
 
 # 4. SessionLocal - factory that creates DB sessions
-SessionLocal = sessionmaker(autocommit=False, autoflash=False, bind=engine)
+SessionLocal = sessionmaker(bind=engine)
 
 
 # 5. Meeting Table - stores raw transcript
@@ -41,7 +41,7 @@ class Meeting(Base):
     
 # 6. ActionItem Table - stores extracted tasks
 class ActionItem(Base):
-    __table_name__ = "action_items"
+    __tablename__ = "action_items"
     
     id = Column(Integer, primary_key=True, autoincrement=True)
     meeting_id = Column(Integer,ForeignKey("meetings.id"), nullable=False)

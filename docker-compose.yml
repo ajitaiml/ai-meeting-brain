@@ -27,8 +27,6 @@ services:
     container_name: meeting_api
     ports:
       - "8000:8000"
-    env_file:
-      - .env
     depends_on:
       - postgres
     volumes:

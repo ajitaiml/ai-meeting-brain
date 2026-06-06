@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 # 1. Load env and initialize LLM
 llm = ChatOpenAI(
-    model="gpt-4o-mini",
+    model="gpt-3.5-turbo",
     temperature=0,
     api_key=os.getenv("OPENAI_API_KEY")
 )

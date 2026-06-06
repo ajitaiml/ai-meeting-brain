@@ -8,9 +8,9 @@ from langchain_core.messages import HumanMessage,SystemMessage
 load_dotenv()
 
 llm = ChatOpenAI(
-    model = "gpt-40-mini",
+    model = "gpt-3.5-turbo",
     temperature=0,
-    api_key=os.get_env('OPENAI_API_KEY'),
+    api_key=os.getenv('OPENAI_API_KEY'),
 )
 
 
