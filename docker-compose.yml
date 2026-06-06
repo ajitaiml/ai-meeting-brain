@@ -1,0 +1,31 @@
+# docker-compose.yml
+
+
+services:
+
+  # --------------------------------------------------
+  # PostgreSQL with pgvector extension
+  # ankane/pgvector is official postgres + pgvector image
+  # --------------------------------------------------
+  postgres:
+    image: ankane/pgvector
+    container_name: meeting_postgres
+    
+    # these become the credentials in your DATABASE_URL
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: meeting_intelligence
+    
+    # maps container port 5432 to your local port 5432
+    # so your app connects via localhost:5432
+    ports:
+      - "5432:5432"
+    
+    # persists data even if container is stopped/deleted
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+# named volume — Docker manages this on your machine
+volumes:
+  postgres_data:
