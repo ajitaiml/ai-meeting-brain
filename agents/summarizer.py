@@ -1,3 +1,5 @@
+# agents/summarizer.py
+
 import json
 import os
 from dotenv import load_dotenv
@@ -19,17 +21,37 @@ You are an expert meeting summarizer.
 Given the meeting transcript and extracted data, generate:
 
 1. summary: a concise 3-line summary of what the meeting was about
-2. email_draft: a professional follow-up email that includes:
-   - Brief summary of meeting
-   - List of action items with owners and deadlines
-   - Next steps
+
+2. email_draft: a professional follow-up email in this exact structure:
+
+Subject: Meeting Follow-Up — [Meeting Topic]
+
+Dear Team,
+
+[2 sentence meeting summary]
+
+Action Items:
+- [Task] — Owner: [Name] | Deadline: [Date] | Priority: [High/Medium/Low]
+
+Decisions Made:
+- [Decision 1]
+- [Decision 2]
+
+Risks to Monitor:
+- [Risk 1]
+
+Please ensure all action items are completed by their respective deadlines.
+
+Best regards,
+[Your Name]
 
 Return ONLY valid JSON. No explanation. No markdown. Format:
 {
   "summary": "3 line summary here",
-  "email_draft": "Full email text here"
+  "email_draft": "Full structured email text here"
 }
 """
+
 
 def strip_json(content: str) -> str:
     content = content.strip()
@@ -39,14 +61,12 @@ def strip_json(content: str) -> str:
             content = content[4:]
     return content.strip()
 
+
 def generate_summary(transcript: str, extracted_data: dict) -> dict:
     messages = [
         SystemMessage(content=SUMMARY_PROMPT),
         HumanMessage(content=f"""
-Transcript:
-{transcript}
-
-Extracted Data:
+Extracted Structured Data:
 {json.dumps(extracted_data, indent=2)}
 """)
     ]
@@ -63,8 +83,19 @@ Extracted Data:
 
     return result
 
-def save_to_database(title: str, transcript: str, extracted_data: dict) -> int:
-    meeting_result = save_meeting(title=title, transcript=transcript)
+
+def save_to_database(title: str, transcript: str, extracted_data: dict, summary: str) -> int:
+    # --------------------------------------------------
+    # pass summary, decisions and risks to save_meeting
+    # so they are stored in DB and retrievable later
+    # --------------------------------------------------
+    meeting_result = save_meeting(
+        title=title,
+        transcript=transcript,
+        summary=summary,
+        decisions=extracted_data.get("decisions", []),
+        risks=extracted_data.get("risks", [])
+    )
     meeting_id = meeting_result["meeting_id"]
 
     save_action_items(

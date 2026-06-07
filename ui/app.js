@@ -184,20 +184,17 @@ async function loadMeetingDetail(id) {
     const response = await fetch(`${API}/meetings/${id}`);
     const data = await response.json();
 
-    // switch to analyze section first
     showSection("analyze");
 
-    // fill in the form
     document.getElementById("meetingTitle").value = data.title;
     document.getElementById("transcript").value = data.transcript;
 
-    // display action items
     displayResults({
-      summary: `Viewing saved meeting: ${data.title}`,
+      summary: data.summary || `Viewing saved meeting: ${data.title}`,
       email_draft: "Re-analyze to regenerate email.",
       action_items: data.action_items,
-      decisions: [],
-      risks: []
+      decisions: data.decisions || [],
+      risks: data.risks || []
     });
 
   } catch (err) {

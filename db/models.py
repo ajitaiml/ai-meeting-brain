@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from sqlalchemy import(
     Boolean,Column,DateTime,Float,
-    ForeignKey,Integer,String,Text,create_engine,text
+    ForeignKey,Integer,String,Text,create_engine,text,JSON
 )
 
 from sqlalchemy.orm import declarative_base,relationship,sessionmaker
@@ -27,17 +27,21 @@ SessionLocal = sessionmaker(bind=engine)
 # 5. Meeting Table - stores raw transcript
 class Meeting(Base):
     __tablename__ = "meetings"
-    
+
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String, nullable=True)
     raw_transcript = Column(Text, nullable=False)
-    created_at = Column(DateTime, default=lambda : datetime.now(timezone.utc) )
-    
-    # One meeting -> many action items
-    action_items = relationship("ActionItem",back_populates="meeting")
-    # one meeting -> many embedding chunks
-    embeddings = relationship("MeetingEmbedding",back_populates="meeting")
-    
+    summary = Column(Text, nullable=True)
+    # --------------------------------------------------
+    # store decisions and risks as JSON arrays
+    # e.g. ["Decision 1", "Decision 2"]
+    # --------------------------------------------------
+    decisions = Column(JSON, nullable=True, default=list)
+    risks = Column(JSON, nullable=True, default=list)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    action_items = relationship("ActionItem", back_populates="meeting")
+    embeddings = relationship("MeetingEmbedding", back_populates="meeting")
     
 # 6. ActionItem Table - stores extracted tasks
 class ActionItem(Base):

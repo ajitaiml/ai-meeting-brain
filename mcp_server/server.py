@@ -33,11 +33,23 @@ def get_session() -> Session:
 # 4. TOOL: save_meeting
 # --------------------------------------------------
 @mcp.tool()
-def save_meeting(title: str, transcript: str) -> dict:
-    """Save a meeting transcript to the database"""
+def save_meeting(
+    title: str,
+    transcript: str,
+    summary: str = "",
+    decisions: list[str] = [],
+    risks: list[str] = []
+) -> dict:
+    """Save a meeting transcript with summary, decisions and risks"""
     db = get_session()
     try:
-        meeting = Meeting(title=title, raw_transcript=transcript)
+        meeting = Meeting(
+            title=title,
+            raw_transcript=transcript,
+            summary=summary,
+            decisions=decisions,
+            risks=risks
+        )
         db.add(meeting)
         db.commit()
         db.refresh(meeting)

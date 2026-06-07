@@ -122,6 +122,9 @@ def get_meeting(meeting_id: int, db: Session = Depends(get_db)):
         "id": meeting.id,
         "title": meeting.title,
         "transcript": meeting.raw_transcript,
+        "summary": meeting.summary,
+        "decisions": meeting.decisions or [],
+        "risks": meeting.risks or [],
         "created_at": meeting.created_at.isoformat(),
         "action_items": [
             {

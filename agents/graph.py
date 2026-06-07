@@ -69,7 +69,8 @@ def summarizer_node(state: MeetingState) -> MeetingState:
     meeting_id = save_to_database(
         title=state["title"],
         transcript=state["transcript"],
-        extracted_data=state["classified_data"]
+        extracted_data=state["classified_data"],
+        summary=result["summary"]  
     )
 
     return {
