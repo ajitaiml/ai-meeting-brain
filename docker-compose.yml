@@ -19,20 +19,21 @@ services:
 
   # --------------------------------------------------
   # 2. FastAPI service
-  #    depends_on postgres = waits for DB to start
-  #    env_file loads your .env into the container
+  #    env_file loads .env variables into container
+  #    environment adds PYTHONPATH for module imports
+  #    depends_on ensures postgres starts first
   # --------------------------------------------------
   api:
     build: .
     container_name: meeting_api
     ports:
       - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - PYTHONPATH=/app
     depends_on:
       - postgres
-    volumes:
-      # mounts local code into container
-      # so code changes reflect without rebuilding
-      - .:/app
 
 volumes:
   postgres_data:
