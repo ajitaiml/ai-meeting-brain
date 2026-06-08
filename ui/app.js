@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // ------------------------------------------------
 // API base URL — FastAPI running in Docker
 // ------------------------------------------------
-const API = "http://localhost:8000";
+const API = "https://ai-meeting-brain.onrender.com";
 
 
 // ------------------------------------------------
