@@ -15,7 +15,15 @@ load_dotenv()
 DATABASE_URL = os.getenv('DATABASE_URL')
 
 # 2. Engine - single connection point on PostgreSQL
-engine = create_engine(DATABASE_URL)
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True,        # test connection before using
+    pool_recycle=300,          # recycle connections every 5 minutes
+    connect_args={
+        "sslmode": "require",
+        "connect_timeout": 10
+    }
+)
 
 # 3. Base - all models inherit from this
 Base = declarative_base()
