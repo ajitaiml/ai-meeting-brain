@@ -14,6 +14,14 @@ The entire system runs in Docker with a single command, uses pgVector for produc
 
 ---
 
+## Live Demo
+
+[https://ai-meeting-brain.onrender.com](https://ai-meeting-brain.onrender.com)
+
+> Note: Hosted on Render free tier — first load may take 30-50 seconds if the service has been inactive.
+
+---
+
 ## What It Does
 
 Paste any meeting transcript and the system automatically extracts:
